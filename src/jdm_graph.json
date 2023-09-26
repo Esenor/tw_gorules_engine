@@ -1,0 +1,244 @@
+{
+  "contentType": "application/vnd.gorules.decision",
+  "edges": [
+    {
+      "id": "c97428b8-4783-455e-b39e-d0f5a05d4ee8",
+      "sourceId": "7309017a-6c16-4502-9582-8303e6bff7a9",
+      "type": "edge",
+      "targetId": "5d190a16-d7e0-45c8-be6a-8faaa8b5f96c"
+    },
+    {
+      "id": "23dad50f-b9b5-4ad5-b6cf-7966b2121e8e",
+      "sourceId": "5d190a16-d7e0-45c8-be6a-8faaa8b5f96c",
+      "type": "edge",
+      "targetId": "2d91fcc6-f8b8-4f77-adb5-1e899e11750c"
+    },
+    {
+      "id": "5c70c6ea-7220-43d0-a8c1-8590525e63fa",
+      "sourceId": "0faeab5b-7f41-408f-ae22-9449c178b417",
+      "type": "edge",
+      "targetId": "faf03be5-ff14-4e01-b33c-0ea93a7ce81e"
+    },
+    {
+      "id": "d7dc962f-aafd-45d3-943a-62aa20343ee1",
+      "sourceId": "faf03be5-ff14-4e01-b33c-0ea93a7ce81e",
+      "type": "edge",
+      "targetId": "7309017a-6c16-4502-9582-8303e6bff7a9"
+    },
+    {
+      "id": "ae13d628-a093-49a0-8094-6042fbc65069",
+      "sourceId": "faf03be5-ff14-4e01-b33c-0ea93a7ce81e",
+      "type": "edge",
+      "targetId": "5d190a16-d7e0-45c8-be6a-8faaa8b5f96c"
+    },
+    {
+      "id": "e2393d39-f03c-4e29-8d81-82c15912b503",
+      "sourceId": "faf03be5-ff14-4e01-b33c-0ea93a7ce81e",
+      "type": "edge",
+      "targetId": "2d91fcc6-f8b8-4f77-adb5-1e899e11750c"
+    },
+    {
+      "id": "175458b7-6d18-4cea-965a-df677dec4d1e",
+      "sourceId": "faf03be5-ff14-4e01-b33c-0ea93a7ce81e",
+      "type": "edge",
+      "targetId": "fafe8d24-9931-4997-b182-72d9022f9ced"
+    },
+    {
+      "id": "53db984c-098f-49d6-99d3-575137599c89",
+      "sourceId": "2d91fcc6-f8b8-4f77-adb5-1e899e11750c",
+      "type": "edge",
+      "targetId": "c0505cfc-d033-47a5-9c71-10750c2525c4"
+    },
+    {
+      "id": "1dec8404-5b11-4582-afb7-13ae0d32a214",
+      "sourceId": "c0505cfc-d033-47a5-9c71-10750c2525c4",
+      "type": "edge",
+      "targetId": "fafe8d24-9931-4997-b182-72d9022f9ced"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "0faeab5b-7f41-408f-ae22-9449c178b417",
+      "type": "inputNode",
+      "position": {
+        "x": 100,
+        "y": -270
+      },
+      "name": "Request"
+    },
+    {
+      "id": "faf03be5-ff14-4e01-b33c-0ea93a7ce81e",
+      "type": "functionNode",
+      "position": {
+        "x": 320,
+        "y": -110
+      },
+      "name": "initial_payload_injector",
+      "content": "/**\n* @param {import('gorules').Input} input\n* @param {{\n*  moment: import('dayjs')\n*  env: Record<string, any>\n* }} helpers\n*/\nconst handler = (input, { moment, env }) => {\n  return {\n    initial_payload: {\n      ...input\n    }\n  };\n}"
+    },
+    {
+      "id": "7309017a-6c16-4502-9582-8303e6bff7a9",
+      "type": "functionNode",
+      "position": {
+        "x": 470,
+        "y": 90
+      },
+      "name": "metaEnrich",
+      "content": "/**\n* @param {import('gorules').Input} input\n* @param {{\n*  moment: import('dayjs')\n*  env: Record<string, any>\n* }} helpers\n*/\nconst handler = (input, { moment, env }) => {\n  return {\n    ...input.initial_payload,\n    meta_data: {\n      vat: 0.2,\n      marge: 0.35\n    }\n  };\n}"
+    },
+    {
+      "id": "5d190a16-d7e0-45c8-be6a-8faaa8b5f96c",
+      "type": "decisionTableNode",
+      "position": {
+        "x": 710,
+        "y": 70
+      },
+      "name": "shippingDecisionTable",
+      "content": {
+        "hitPolicy": "first",
+        "inputs": [
+          {
+            "id": "xSh4Pqm71T",
+            "type": "expression",
+            "field": "initial_payload.qty",
+            "name": "qty"
+          },
+          {
+            "field": "initial_payload.type",
+            "id": "ConmRC2D-w",
+            "name": "customer type",
+            "type": "expression"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "XpEO1NXGEg",
+            "type": "expression",
+            "field": "price",
+            "name": "price"
+          },
+          {
+            "field": "shipping_type",
+            "id": "Aw89vjO5Mh",
+            "name": "shipping type",
+            "type": "expression"
+          },
+          {
+            "id": "MoeTLSKIAR",
+            "type": "expression",
+            "field": "meta_data",
+            "name": "metadata"
+          }
+        ],
+        "rules": [
+          {
+            "_id": "BZE9DB1xEP",
+            "xSh4Pqm71T": "[1..10]",
+            "ConmRC2D-w": "\"pro\"",
+            "XpEO1NXGEg": "5",
+            "Aw89vjO5Mh": "\"premium\"",
+            "MoeTLSKIAR": "meta_data"
+          },
+          {
+            "_id": "Qqbf6uyK0k",
+            "xSh4Pqm71T": "[10..20]",
+            "ConmRC2D-w": "\"pro\"",
+            "XpEO1NXGEg": "10",
+            "Aw89vjO5Mh": "\"premium\"",
+            "MoeTLSKIAR": "meta_data"
+          },
+          {
+            "_id": "-RiUZ-PFxy",
+            "xSh4Pqm71T": "[20..30]",
+            "ConmRC2D-w": "\"pro\"",
+            "XpEO1NXGEg": "15",
+            "Aw89vjO5Mh": "\"premium\"",
+            "MoeTLSKIAR": "meta_data"
+          },
+          {
+            "_id": "48EjirFSXI",
+            "xSh4Pqm71T": "[1..10]",
+            "ConmRC2D-w": "\"part\"",
+            "XpEO1NXGEg": "3",
+            "Aw89vjO5Mh": "\"standard\"",
+            "MoeTLSKIAR": "meta_data"
+          },
+          {
+            "_id": "5yvyg4xTM5",
+            "xSh4Pqm71T": "[10..20]",
+            "ConmRC2D-w": "\"part\"",
+            "XpEO1NXGEg": "6",
+            "Aw89vjO5Mh": "\"standard\"",
+            "MoeTLSKIAR": "meta_data"
+          },
+          {
+            "_id": "-OiuWswoNl",
+            "xSh4Pqm71T": "[20..30]",
+            "ConmRC2D-w": "\"part\"",
+            "XpEO1NXGEg": "15",
+            "Aw89vjO5Mh": "\"premium\"",
+            "MoeTLSKIAR": "meta_data"
+          },
+          {
+            "_id": "P8EHJM83Ri",
+            "xSh4Pqm71T": "> 30",
+            "ConmRC2D-w": "",
+            "XpEO1NXGEg": "(3*qty) > 90 ? 90 : (3*qty)",
+            "Aw89vjO5Mh": "\"premium\"",
+            "MoeTLSKIAR": "meta_data"
+          },
+          {
+            "_id": "cwlanZ3kZj",
+            "xSh4Pqm71T": "",
+            "ConmRC2D-w": "",
+            "XpEO1NXGEg": "3",
+            "Aw89vjO5Mh": "\"default\"",
+            "MoeTLSKIAR": "meta_data"
+          }
+        ]
+      }
+    },
+    {
+      "id": "2d91fcc6-f8b8-4f77-adb5-1e899e11750c",
+      "type": "expressionNode",
+      "position": {
+        "x": 950,
+        "y": 20
+      },
+      "name": "vatTax",
+      "content": {
+        "expressions": [
+          {
+            "id": "QGWSjNjAQ8",
+            "key": "price",
+            "value": "price + (price * meta_data.vat)"
+          },
+          {
+            "id": "zVAP_A9kXQ",
+            "key": "shipping_type",
+            "value": "shipping_type"
+          }
+        ]
+      }
+    },
+    {
+      "id": "c0505cfc-d033-47a5-9c71-10750c2525c4",
+      "type": "functionNode",
+      "position": {
+        "x": 1170,
+        "y": -70
+      },
+      "name": "response_injector",
+      "content": "/**\n* @param {import('gorules').Input} input\n* @param {{\n*  moment: import('dayjs')\n*  env: Record<string, any>\n* }} helpers\n*/\nconst handler = (input, { moment, env }) => {\n  return {\n    response: {\n      ...input\n    }\n  };\n}"
+    },
+    {
+      "id": "fafe8d24-9931-4997-b182-72d9022f9ced",
+      "type": "outputNode",
+      "position": {
+        "x": 1390,
+        "y": -210
+      },
+      "name": "Response"
+    }
+  ]
+}
